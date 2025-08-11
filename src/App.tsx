@@ -1,0 +1,198 @@
+import BuildInfo from "@/BuildInfo";
+import Extension from "@/Extension";
+import Extensions from "@/Extensions";
+import ServerInfo from "@/ServerInfo";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from "@/components/ui/navigation-menu";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { isExtensionInfo } from "@/lib/utils";
+import { useEffect, useMemo, useState } from "react";
+
+const Environment = {
+  Public: "https://hosting.portal.azure.net/api/diagnostics",
+  Fairfax: "https://hosting.azureportal.usgovcloudapi.net/api/diagnostics",
+  Mooncake: "https://hosting.azureportal.chinacloudapi.cn/api/diagnostics",
+} as const;
+
+const App: React.FC = () => {
+  const [diagnostics, setDiagnostics] = useState<Diagnostics>();
+  const [extension, setExtension] = useState<ExtensionInfo>();
+  const [environment, setEnvironment] = useState<string>(Environment.Public);
+  const [selectedTab, setSelectedTab] = useState<string>("extensions");
+
+  const environmentName = useMemo(() => {
+    switch (environment) {
+      case Environment.Public:
+        return "Public Cloud";
+      case Environment.Fairfax:
+        return "Fairfax";
+      case Environment.Mooncake:
+        return "Mooncake";
+      default:
+        return "Select environment";
+    }
+  }, [environment]);
+
+  const showPaasServerless = useMemo(
+    () => isExtensionInfo(diagnostics?.extensions["paasserverless"]),
+    [diagnostics?.extensions]
+  );
+
+  const environments = useMemo(
+    () => [
+      {
+        key: "public",
+        text: "Public Cloud",
+        selected: environment === Environment.Public,
+        onClick: () => {
+          setEnvironment(Environment.Public);
+          setExtension(undefined);
+        },
+      },
+      {
+        key: "fairfax",
+        text: "Fairfax",
+        selected: environment === Environment.Fairfax,
+        onClick: () => {
+          setEnvironment(Environment.Fairfax);
+          setExtension(undefined);
+        },
+      },
+      {
+        key: "mooncake",
+        text: "Mooncake",
+        selected: environment === Environment.Mooncake,
+        onClick: () => {
+          setEnvironment(Environment.Mooncake);
+          setExtension(undefined);
+        },
+      },
+    ],
+    [environment]
+  );
+
+  useEffect(() => {
+    const getDiagnostics = async () => {
+      const response = await fetch(environment);
+      setDiagnostics(await response.json());
+    };
+    getDiagnostics();
+  }, [environment]);
+
+  if (!diagnostics) {
+    return null;
+  }
+
+  const { buildInfo, extensions, serverInfo } = diagnostics;
+
+  const handleLinkClick = (_?: React.MouseEvent, item?: KeyedNavLink) => {
+    if (item) {
+      const extension = extensions[item.key];
+      if (isExtensionInfo(extension)) {
+        setExtension(extension);
+      }
+    }
+  };
+
+  return (
+    <>
+      <NavigationMenu>
+        <NavigationMenuList>
+          <NavigationMenuItem>
+            <NavigationMenuTrigger>{environmentName}</NavigationMenuTrigger>
+            <NavigationMenuContent>
+              <div className="flex flex-col gap-1 w-max min-w-[10rem]">
+                {environments.map((env) => (
+                  <NavigationMenuLink
+                    key={env.key}
+                    onClick={env.onClick}
+                    aria-checked={env.selected}
+                    role="menuitemradio"
+                    className={`w-full text-left rounded-sm p-2 text-sm whitespace-nowrap cursor-pointer ${
+                      env.selected
+                        ? "bg-accent text-accent-foreground"
+                        : "hover:bg-accent hover:text-accent-foreground"
+                    }`}
+                  >
+                    {env.text}
+                  </NavigationMenuLink>
+                ))}
+              </div>
+            </NavigationMenuContent>
+          </NavigationMenuItem>
+          {showPaasServerless && (
+            <NavigationMenuItem>
+              <NavigationMenuLink
+                className="rounded-sm p-2 text-sm hover:bg-accent hover:text-accent-foreground cursor-pointer"
+                key="paasserverless"
+                onClick={() => {
+                  const paasserverless =
+                    diagnostics?.extensions["paasserverless"];
+                  if (isExtensionInfo(paasserverless)) {
+                    setExtension(paasserverless);
+                  }
+                }}
+              >
+                paasserverless
+              </NavigationMenuLink>
+            </NavigationMenuItem>
+          )}
+          <NavigationMenuItem>
+            <NavigationMenuLink
+              className="rounded-sm p-2 text-sm hover:bg-accent hover:text-accent-foreground cursor-pointer"
+              key="websites"
+              onClick={() => {
+                const websites = diagnostics?.extensions["websites"];
+                if (isExtensionInfo(websites)) {
+                  setExtension(websites);
+                }
+              }}
+            >
+              websites
+            </NavigationMenuLink>
+          </NavigationMenuItem>
+        </NavigationMenuList>
+      </NavigationMenu>
+      <Tabs value={selectedTab} onValueChange={setSelectedTab}>
+        <TabsList>
+          <TabsTrigger value="extensions">Extensions</TabsTrigger>
+          <TabsTrigger value="build">Build Information</TabsTrigger>
+          <TabsTrigger value="server">Server Information</TabsTrigger>
+        </TabsList>
+        <TabsContent value="extensions">
+          <div className="p-2.5">
+            <div className="flex flex-row gap-4">
+              <div>
+                <Extensions
+                  extensions={extensions}
+                  onLinkClick={handleLinkClick}
+                />
+              </div>
+              <div className="flex-grow">
+                {extension && <Extension {...extension} />}
+              </div>
+            </div>
+          </div>
+        </TabsContent>
+        <TabsContent value="build">
+          <div className="p-2.5">
+            <BuildInfo {...buildInfo} />
+          </div>
+        </TabsContent>
+        <TabsContent value="server">
+          <div className="p-2.5">
+            <ServerInfo {...serverInfo} />
+          </div>
+        </TabsContent>
+      </Tabs>
+    </>
+  );
+};
+
+export default App;
