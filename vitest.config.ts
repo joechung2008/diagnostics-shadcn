@@ -15,7 +15,7 @@ export default defineConfig({
     coverage: {
       provider: "v8",
       include: ["src/**/*.{ts,tsx}"],
-      exclude: ["src/components/**", "src/reportWebVitals.ts"],
+      exclude: ["src/components/**", "src/reportWebVitals.ts", "src/**/*.d.ts"],
       reporter: ["text", "html", "lcov"],
     },
     environment: "jsdom",
