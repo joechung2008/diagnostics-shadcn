@@ -10,7 +10,7 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { isExtensionInfo } from "@/lib/utils";
 import { useEffect, useMemo, useState } from "react";
 
@@ -101,97 +101,92 @@ const App: React.FC = () => {
   };
 
   return (
-    <>
-      <NavigationMenu>
-        <NavigationMenuList>
-          <NavigationMenuItem>
-            <NavigationMenuTrigger>{environmentName}</NavigationMenuTrigger>
-            <NavigationMenuContent>
-              <div className="flex flex-col gap-1 w-max min-w-[10rem]">
-                {environments.map((env) => (
-                  <NavigationMenuLink
-                    key={env.key}
-                    onClick={env.onClick}
-                    aria-checked={env.selected}
-                    role="menuitemradio"
-                    className={`w-full text-left rounded-sm p-2 text-sm whitespace-nowrap cursor-pointer ${
-                      env.selected
-                        ? "bg-accent text-accent-foreground"
-                        : "hover:bg-accent hover:text-accent-foreground"
-                    }`}
-                  >
-                    {env.text}
-                  </NavigationMenuLink>
-                ))}
-              </div>
-            </NavigationMenuContent>
-          </NavigationMenuItem>
-          {showPaasServerless && (
+    <div className="flex flex-col gap-1 h-screen">
+      <div>
+        <NavigationMenu>
+          <NavigationMenuList>
+            <NavigationMenuItem>
+              <NavigationMenuTrigger>{environmentName}</NavigationMenuTrigger>
+              <NavigationMenuContent>
+                <div className="flex flex-col gap-1 w-max min-w-[10rem]">
+                  {environments.map((env) => (
+                    <NavigationMenuLink
+                      key={env.key}
+                      onClick={env.onClick}
+                      aria-checked={env.selected}
+                      role="menuitemradio"
+                      className={`w-full text-left rounded-sm p-2 text-sm whitespace-nowrap cursor-pointer ${
+                        env.selected
+                          ? "bg-accent text-accent-foreground"
+                          : "hover:bg-accent hover:text-accent-foreground"
+                      }`}
+                    >
+                      {env.text}
+                    </NavigationMenuLink>
+                  ))}
+                </div>
+              </NavigationMenuContent>
+            </NavigationMenuItem>
+            {showPaasServerless && (
+              <NavigationMenuItem>
+                <NavigationMenuLink
+                  className="rounded-sm p-2 text-sm hover:bg-accent hover:text-accent-foreground cursor-pointer"
+                  key="paasserverless"
+                  onClick={() => {
+                    const paasserverless =
+                      diagnostics?.extensions["paasserverless"];
+                    if (isExtensionInfo(paasserverless)) {
+                      setExtension(paasserverless);
+                    }
+                  }}
+                >
+                  paasserverless
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+            )}
             <NavigationMenuItem>
               <NavigationMenuLink
                 className="rounded-sm p-2 text-sm hover:bg-accent hover:text-accent-foreground cursor-pointer"
-                key="paasserverless"
+                key="websites"
                 onClick={() => {
-                  const paasserverless =
-                    diagnostics?.extensions["paasserverless"];
-                  if (isExtensionInfo(paasserverless)) {
-                    setExtension(paasserverless);
+                  const websites = diagnostics?.extensions["websites"];
+                  if (isExtensionInfo(websites)) {
+                    setExtension(websites);
                   }
                 }}
               >
-                paasserverless
+                websites
               </NavigationMenuLink>
             </NavigationMenuItem>
-          )}
-          <NavigationMenuItem>
-            <NavigationMenuLink
-              className="rounded-sm p-2 text-sm hover:bg-accent hover:text-accent-foreground cursor-pointer"
-              key="websites"
-              onClick={() => {
-                const websites = diagnostics?.extensions["websites"];
-                if (isExtensionInfo(websites)) {
-                  setExtension(websites);
-                }
-              }}
-            >
-              websites
-            </NavigationMenuLink>
-          </NavigationMenuItem>
-        </NavigationMenuList>
-      </NavigationMenu>
+          </NavigationMenuList>
+        </NavigationMenu>
+      </div>
       <Tabs value={selectedTab} onValueChange={setSelectedTab}>
         <TabsList>
           <TabsTrigger value="extensions">Extensions</TabsTrigger>
           <TabsTrigger value="build">Build Information</TabsTrigger>
           <TabsTrigger value="server">Server Information</TabsTrigger>
         </TabsList>
-        <TabsContent value="extensions">
-          <div className="p-2.5">
-            <div className="flex flex-row gap-4">
-              <div>
-                <Extensions
-                  extensions={extensions}
-                  onLinkClick={handleLinkClick}
-                />
-              </div>
-              <div className="flex-grow">
-                {extension && <Extension {...extension} />}
-              </div>
-            </div>
-          </div>
-        </TabsContent>
-        <TabsContent value="build">
-          <div className="p-2.5">
-            <BuildInfo {...buildInfo} />
-          </div>
-        </TabsContent>
-        <TabsContent value="server">
-          <div className="p-2.5">
-            <ServerInfo {...serverInfo} />
-          </div>
-        </TabsContent>
       </Tabs>
-    </>
+      {selectedTab === "extensions" && (
+        <div className="box-border flex-1 overflow-y-auto">
+          <div className="flex flex-row gap-4 h-full">
+            <Extensions extensions={extensions} onLinkClick={handleLinkClick} />
+            {extension && <Extension {...extension} />}
+          </div>
+        </div>
+      )}
+      {selectedTab === "build" && (
+        <div className="box-border flex-1 overflow-y-auto">
+          <BuildInfo {...buildInfo} />
+        </div>
+      )}
+      {selectedTab === "server" && (
+        <div className="box-border flex-1 overflow-y-auto">
+          <ServerInfo {...serverInfo} />
+        </div>
+      )}
+    </div>
   );
 };
 

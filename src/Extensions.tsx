@@ -9,21 +9,19 @@ const Extensions: React.FC<ExtensionsProps> = ({ extensions, onLinkClick }) => {
   return (
     <nav
       aria-label="Extensions"
-      className="max-h-[calc(100vh-116px)] overflow-x-hidden overflow-y-auto flex flex-col p-4"
+      className="flex flex-col gap-2 max-h-max overflow-y-auto p-2"
     >
-      <div className="flex flex-col items-stretch gap-3">
-        {links.map((link) => (
-          <button
-            className="w-full min-h-[1.6rem] box-border cursor-pointer text-left px-2 py-1 rounded hover:bg-accent"
-            key={link.key}
-            onClick={(e) => onLinkClick?.(e, link)}
-            tabIndex={0}
-            type="button"
-          >
-            {link.name}
-          </button>
-        ))}
-      </div>
+      {links.map((link) => (
+        <button
+          className="extension-nav-button w-full min-h-[max-content] box-border cursor-pointer text-left px-2 py-1 rounded hover:bg-accent"
+          key={link.key}
+          onClick={(e) => onLinkClick?.(e, link)}
+          tabIndex={0}
+          type="button"
+        >
+          {link.name}
+        </button>
+      ))}
     </nav>
   );
 };

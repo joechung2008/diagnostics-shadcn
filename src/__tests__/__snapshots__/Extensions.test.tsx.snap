@@ -4,26 +4,22 @@ exports[`Extensions > matches snapshot with mixed extensions (info + error) 1`] 
 <DocumentFragment>
   <nav
     aria-label="Extensions"
-    class="max-h-[calc(100vh-116px)] overflow-x-hidden overflow-y-auto flex flex-col p-4"
+    class="flex flex-col gap-2 max-h-max overflow-y-auto p-2"
   >
-    <div
-      class="flex flex-col items-stretch gap-3"
+    <button
+      class="extension-nav-button w-full min-h-[max-content] box-border cursor-pointer text-left px-2 py-1 rounded hover:bg-accent"
+      tabindex="0"
+      type="button"
     >
-      <button
-        class="w-full min-h-[1.6rem] box-border cursor-pointer text-left px-2 py-1 rounded hover:bg-accent"
-        tabindex="0"
-        type="button"
-      >
-        alpha
-      </button>
-      <button
-        class="w-full min-h-[1.6rem] box-border cursor-pointer text-left px-2 py-1 rounded hover:bg-accent"
-        tabindex="0"
-        type="button"
-      >
-        beta
-      </button>
-    </div>
+      alpha
+    </button>
+    <button
+      class="extension-nav-button w-full min-h-[max-content] box-border cursor-pointer text-left px-2 py-1 rounded hover:bg-accent"
+      tabindex="0"
+      type="button"
+    >
+      beta
+    </button>
   </nav>
 </DocumentFragment>
 `;
@@ -32,11 +28,7 @@ exports[`Extensions > matches snapshot with no extensions 1`] = `
 <DocumentFragment>
   <nav
     aria-label="Extensions"
-    class="max-h-[calc(100vh-116px)] overflow-x-hidden overflow-y-auto flex flex-col p-4"
-  >
-    <div
-      class="flex flex-col items-stretch gap-3"
-    />
-  </nav>
+    class="flex flex-col gap-2 max-h-max overflow-y-auto p-2"
+  />
 </DocumentFragment>
 `;

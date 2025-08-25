@@ -3,7 +3,7 @@
 exports[`Extension > matches snapshot with full data (config + stageDefinition) 1`] = `
 <DocumentFragment>
   <div
-    class="max-h-[calc(100vh-116px)] overflow-y-auto flex flex-col gap-4"
+    class="flex flex-col gap-2 max-h-max overflow-y-auto p-2 flex-grow"
   >
     <h1
       class="text-xl font-semibold"
@@ -175,7 +175,7 @@ exports[`Extension > matches snapshot with full data (config + stageDefinition) 
 exports[`Extension > matches snapshot with only extensionName 1`] = `
 <DocumentFragment>
   <div
-    class="max-h-[calc(100vh-116px)] overflow-y-auto flex flex-col gap-4"
+    class="flex flex-col gap-2 max-h-max overflow-y-auto p-2 flex-grow"
   >
     <h1
       class="text-xl font-semibold"
