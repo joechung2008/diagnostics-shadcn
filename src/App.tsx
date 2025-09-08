@@ -163,13 +163,19 @@ const App: React.FC = () => {
       </div>
       <Tabs value={selectedTab} onValueChange={setSelectedTab}>
         <TabsList>
-          <TabsTrigger value="extensions">Extensions</TabsTrigger>
-          <TabsTrigger value="build">Build Information</TabsTrigger>
-          <TabsTrigger value="server">Server Information</TabsTrigger>
+          <TabsTrigger aria-controls="extensions-tab" value="extensions">
+            Extensions
+          </TabsTrigger>
+          <TabsTrigger aria-controls="build-tab" value="build">
+            Build Information
+          </TabsTrigger>
+          <TabsTrigger aria-controls="server-tab" value="server">
+            Server Information
+          </TabsTrigger>
         </TabsList>
       </Tabs>
       {selectedTab === "extensions" && (
-        <div className="box-border flex-1 overflow-y-auto">
+        <div id="extensions-tab" className="box-border flex-1 overflow-y-auto">
           <div className="flex flex-row gap-4 h-full">
             <Extensions extensions={extensions} onLinkClick={handleLinkClick} />
             {extension && <Extension {...extension} />}
@@ -177,12 +183,12 @@ const App: React.FC = () => {
         </div>
       )}
       {selectedTab === "build" && (
-        <div className="box-border flex-1 overflow-y-auto">
+        <div id="build-tab" className="box-border flex-1 overflow-y-auto">
           <BuildInfo {...buildInfo} />
         </div>
       )}
       {selectedTab === "server" && (
-        <div className="box-border flex-1 overflow-y-auto">
+        <div id="server-tab" className="box-border flex-1 overflow-y-auto">
           <ServerInfo {...serverInfo} />
         </div>
       )}
