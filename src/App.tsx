@@ -128,35 +128,30 @@ const App: React.FC = () => {
               </NavigationMenuContent>
             </NavigationMenuItem>
             {showPaasServerless && (
-              <NavigationMenuItem>
-                <NavigationMenuLink
-                  className="rounded-sm p-2 text-sm hover:bg-accent hover:text-accent-foreground cursor-pointer"
-                  key="paasserverless"
-                  onClick={() => {
-                    const paasserverless =
-                      diagnostics?.extensions["paasserverless"];
-                    if (isExtensionInfo(paasserverless)) {
-                      setExtension(paasserverless);
-                    }
-                  }}
-                >
-                  paasserverless
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-            )}
-            <NavigationMenuItem>
-              <NavigationMenuLink
-                className="rounded-sm p-2 text-sm hover:bg-accent hover:text-accent-foreground cursor-pointer"
-                key="websites"
+              <NavigationMenuItem
+                key="paasserverless"
                 onClick={() => {
-                  const websites = diagnostics?.extensions["websites"];
-                  if (isExtensionInfo(websites)) {
-                    setExtension(websites);
+                  const paasserverless =
+                    diagnostics?.extensions["paasserverless"];
+                  if (isExtensionInfo(paasserverless)) {
+                    setExtension(paasserverless);
                   }
                 }}
               >
-                websites
-              </NavigationMenuLink>
+                paasserverless
+              </NavigationMenuItem>
+            )}
+            <NavigationMenuItem
+              className="rounded-sm p-2 text-sm hover:bg-accent hover:text-accent-foreground cursor-pointer"
+              key="websites"
+              onClick={() => {
+                const websites = diagnostics?.extensions["websites"];
+                if (isExtensionInfo(websites)) {
+                  setExtension(websites);
+                }
+              }}
+            >
+              websites
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
